@@ -24,6 +24,10 @@ module.exports = {
         test: /\.s[ac]ss$/i,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
   plugins: [
@@ -36,5 +40,5 @@ module.exports = {
       publicPath: '/build',
       directory: path.join(__dirname, 'build'),
     },
-  }
-}
+  },
+};
