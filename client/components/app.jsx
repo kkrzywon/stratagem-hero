@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import stratagems from './stratagems'; // Adjust the import path as necessary
+import stratagems from './stratagems.js'; // Adjust the import path as necessary
 
 // Importing arrow images
 import arrowUp from './arrow-pngs/white-arrow-up.png';
@@ -50,7 +50,7 @@ const Game = () => {
         setUserSequence(updatedUserSequence);
         if (updatedUserSequence.length === sequence.length) {
           setStatus('Congratulations! You completed the sequence.');
-          setTimeout(selectRandomStratagem, 500); // Wait for 2 seconds before showing new stratagem
+          setTimeout(selectRandomStratagem, 500); // Reduced delay to 0.5 seconds
         } else {
           setStatus('Good! Keep going.');
         }
@@ -78,7 +78,12 @@ const Game = () => {
   return (
     <div>
       <h2>{status}</h2>
-      {currentStratagem.name && <h3>{currentStratagem.name}</h3>}
+      {currentStratagem.name && (
+        <div>
+          <img src={currentStratagem.image} alt={currentStratagem.name} style={{ width: 50, height: 50 }} />
+          <h3>{currentStratagem.name}</h3>
+        </div>
+      )}
       <p>Sequence to follow:</p>
       <div>
         {sequence.map((arrow, index) => (
