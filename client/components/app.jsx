@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import stratagems from './stratagems'; // Adjust the import path as necessary
 
 // Importing arrow images
 import arrowUp from './arrow-pngs/white-arrow-up.png';
@@ -14,17 +15,24 @@ const Game = () => {
   const [sequence, setSequence] = useState([]);
   const [userSequence, setUserSequence] = useState([]);
   const [status, setStatus] = useState('Start the game!');
+  const [currentStratagem, setCurrentStratagem] = useState({});
+
+  const selectRandomStratagem = () => {
+    const randomStratagem = stratagems[Math.floor(Math.random() * stratagems.length)];
+    setCurrentStratagem(randomStratagem);
+    setSequence(randomStratagem.sequence);
+    setUserSequence([]);
+    setStatus('New stratagem! Follow the sequence.');
+  };
 
   useEffect(() => {
-    const newSequence = ['Up', 'Down', 'Left', 'Right']; // Simplified sequence
-    setSequence(newSequence);
+    selectRandomStratagem();
   }, []);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (!sequence.length) return;
 
-      // Map the Arrow keys to the simplified versions
       const keyMap = {
         ArrowUp: 'Up',
         ArrowDown: 'Down',
@@ -39,18 +47,17 @@ const Game = () => {
         setStatus('Incorrect! Try again.');
         setUserSequence([]);
       } else {
+        setUserSequence(updatedUserSequence);
         if (updatedUserSequence.length === sequence.length) {
           setStatus('Congratulations! You completed the sequence.');
-          setUserSequence([]);
+          setTimeout(selectRandomStratagem, 500); // Wait for 2 seconds before showing new stratagem
         } else {
-          setUserSequence(updatedUserSequence);
           setStatus('Good! Keep going.');
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -71,6 +78,7 @@ const Game = () => {
   return (
     <div>
       <h2>{status}</h2>
+      {currentStratagem.name && <h3>{currentStratagem.name}</h3>}
       <p>Sequence to follow:</p>
       <div>
         {sequence.map((arrow, index) => (
