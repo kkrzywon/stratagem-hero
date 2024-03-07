@@ -16,7 +16,7 @@ const Game = () => {
   const [status, setStatus] = useState('Start the game!');
 
   useEffect(() => {
-    const newSequence = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']; // Example sequence
+    const newSequence = ['Up', 'Down', 'Left', 'Right']; // Simplified sequence
     setSequence(newSequence);
   }, []);
 
@@ -24,10 +24,18 @@ const Game = () => {
     const handleKeyDown = (event) => {
       if (!sequence.length) return;
 
-      const nextArrow = event.key;
+      // Map the Arrow keys to the simplified versions
+      const keyMap = {
+        ArrowUp: 'Up',
+        ArrowDown: 'Down',
+        ArrowLeft: 'Left',
+        ArrowRight: 'Right',
+      };
+
+      const nextArrow = keyMap[event.key] || '';
       let updatedUserSequence = [...userSequence, nextArrow];
 
-      if (nextArrow !== sequence[userSequence.length]) {
+      if (!nextArrow || nextArrow !== sequence[userSequence.length]) {
         setStatus('Incorrect! Try again.');
         setUserSequence([]);
       } else {
@@ -50,18 +58,14 @@ const Game = () => {
 
   const getArrowImage = (arrow, index) => {
     const isCorrectSequence = index < userSequence.length;
-    switch (arrow) {
-      case 'ArrowUp':
-        return isCorrectSequence ? arrowUpFilled : arrowUp;
-      case 'ArrowDown':
-        return isCorrectSequence ? arrowDownFilled : arrowDown;
-      case 'ArrowLeft':
-        return isCorrectSequence ? arrowLeftFilled : arrowLeft;
-      case 'ArrowRight':
-        return isCorrectSequence ? arrowRightFilled : arrowRight;
-      default:
-        return null;
-    }
+    const arrowMap = {
+      Up: isCorrectSequence ? arrowUpFilled : arrowUp,
+      Down: isCorrectSequence ? arrowDownFilled : arrowDown,
+      Left: isCorrectSequence ? arrowLeftFilled : arrowLeft,
+      Right: isCorrectSequence ? arrowRightFilled : arrowRight,
+    };
+
+    return arrowMap[arrow] || null;
   };
 
   return (
@@ -70,7 +74,7 @@ const Game = () => {
       <p>Sequence to follow:</p>
       <div>
         {sequence.map((arrow, index) => (
-          <img key={index} src={getArrowImage(arrow, index)} alt={arrow.replace('Arrow', '')} style={{ width: 50, height: 50 }} />
+          <img key={index} src={getArrowImage(arrow, index)} alt={arrow} style={{ width: 50, height: 50 }} />
         ))}
       </div>
     </div>
