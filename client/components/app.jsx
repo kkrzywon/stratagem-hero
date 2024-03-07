@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import stratagems from './stratagems.js'; // Adjust the import path as necessary
+import stratagems from './stratagems.js';
+import './scss/app.scss';
 
 // Importing arrow images
 import arrowUp from './arrow-pngs/white-arrow-up.png';
@@ -16,6 +17,7 @@ const Game = () => {
   const [userSequence, setUserSequence] = useState([]);
   const [status, setStatus] = useState('Start the game!');
   const [currentStratagem, setCurrentStratagem] = useState({});
+  const [shake, setShake] = useState(false); // State to control shaking
 
   const selectRandomStratagem = () => {
     const randomStratagem = stratagems[Math.floor(Math.random() * stratagems.length)];
@@ -46,11 +48,13 @@ const Game = () => {
       if (!nextArrow || nextArrow !== sequence[userSequence.length]) {
         setStatus('Incorrect! Try again.');
         setUserSequence([]);
+        setShake(true);
+        setTimeout(() => setShake(false), 500); // Reset shake effect after 0.5 seconds
       } else {
         setUserSequence(updatedUserSequence);
         if (updatedUserSequence.length === sequence.length) {
           setStatus('Congratulations! You completed the sequence.');
-          setTimeout(selectRandomStratagem, 500); // Reduced delay to 0.5 seconds
+          setTimeout(selectRandomStratagem, 500);
         } else {
           setStatus('Good! Keep going.');
         }
@@ -58,9 +62,7 @@ const Game = () => {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [sequence, userSequence]);
 
   const getArrowImage = (arrow, index) => {
@@ -76,18 +78,18 @@ const Game = () => {
   };
 
   return (
-    <div>
+    <div className="game-container">
       <h2>{status}</h2>
       {currentStratagem.name && (
         <div>
-          <img src={currentStratagem.image} alt={currentStratagem.name} style={{ width: 50, height: 50 }} />
+          <img src={currentStratagem.image} alt={currentStratagem.name} style={{ width: 75, height: 75 }} />
           <h3>{currentStratagem.name}</h3>
         </div>
       )}
       <p>Sequence to follow:</p>
-      <div>
+      <div className="sequence">
         {sequence.map((arrow, index) => (
-          <img key={index} src={getArrowImage(arrow, index)} alt={arrow} style={{ width: 50, height: 50 }} />
+          <img key={index} src={getArrowImage(arrow, index)} alt={arrow} className={shake ? 'shake' : ''} style={{ width: 75, height: 75 }} />
         ))}
       </div>
     </div>
