@@ -111,7 +111,7 @@ const Game = () => {
           <img
             src={completionImage}
             alt="Completion"
-            style={{ width: '30%', height: 'auto' }}
+            style={{ width: '20%', height: 'auto' }}
           />
         )}
     </div>
